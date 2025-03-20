@@ -21,7 +21,9 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
         page_arr[page_indices[page.name]] = 0
         for linked_page in page.links:
             page_arr[page_indices[linked_page]] += 1
-        
+        if len(page.links) == 0:
+            page_arr = page_arr + 1; #choose a page at random
+
         page_arr = page_arr + dampening
         total = sum(page_arr)
         page_arr = page_arr / total
@@ -29,6 +31,8 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
 
     arr = np.matrix(arr);
     arr = arr.T;
+
+    print(arr)
 
     # create a steady state vector
     q = []
@@ -58,5 +62,5 @@ a = Page("A", ["B", "C"])
 b = Page("B", [])
 c = Page("C", ["B"])
 pages = [a, b, c]
-a = page_rank(pages, 0.12)
+a = page_rank(pages, 0.50)
 print(a)
