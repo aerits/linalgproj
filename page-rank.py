@@ -20,7 +20,7 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
         page_arr = np.zeros(len(pages));
         page_arr[page_indices[page.name]] = 0
         for linked_page in page.links:
-            page_arr[page_indices[linked_page]] += 1
+            page_arr[page_indices[linked_page]] = 1
         if len(page.links) == 0:
             page_arr = page_arr + 1; #choose a page at random
 
