@@ -14,7 +14,9 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
     for page in pages:
         index += 1;
         page_indices[page.name] = index;
+        # give each page an index
     for page in pages:
+        # create a probability vector for each page
         page_arr = np.zeros(len(pages));
         page_arr[page_indices[page.name]] = 0
         for linked_page in page.links:
@@ -27,6 +29,8 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
 
     arr = np.matrix(arr);
     arr = arr.T;
+
+    # create a steady state vector
     q = []
     for i in range(0, len(pages)):
         q.append([0])
@@ -34,10 +38,13 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
     q[0,0] = 1;
     q = arr**1000 * q
     
+    # create an array of (page name, page probability)
     new_array = []
     for i in range(0,len(pages)):
         new_array.append((pages[i].name, q[i,0]))
     
+    # remove the highest page probability in new array and add to page ranking
+    # do this until there are no more in new array
     page_ranking = []
     while len(new_array) > 0:
         maximum = (0, new_array[0][1]);
