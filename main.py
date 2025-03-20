@@ -32,10 +32,7 @@ def follow_markov(markov, vector: np.array) -> np.matrix:
             # print("returning")
             return arr;
 
-        
-
-def main():
-    print(markov)
+def estimate_steady_state() -> np.matrix:
     vec = np.matrix([[1], [0], [0], [0], [0], [0]])
     probability = np.matrix([[0], [0], [0], [0], [0], [0]])
     for i in range(0,1_000_000):
@@ -44,11 +41,43 @@ def main():
         probability = vec + probability
         # print(vec)
     total = probability.sum()
-    probability = probability / total;
-    print(probability)
+    return probability / total;
+    
+def estimate_reach_d_first() -> np.matrix:
+    probability = np.matrix([[0], [0], [0], [0], [0], [0]])
+    for i in range(0, 10_000):
+        vec = np.matrix([[1], [0], [0], [0], [0], [0]])
+        while True:
+            vec = follow_markov(markov, vec);
+            if vec[2, 0] == 1:
+                probability[2,0] += 1
+                break;
+            if vec[3,0] == 1:
+                probability[3,0] += 1;
+                break;
+    total = probability.sum()
+    return probability/total;
+
+def estimate_average_num_of_steps_to_reach_f() -> np.matrix:
+    all_steps = []
+    for i in range(0, 10_000):
+        vec = np.matrix([[1], [0], [0], [0], [0], [0]])
+        step_count = 0;
+        while True:
+            vec = follow_markov(markov, vec);
+            step_count += 1;
+            if vec[5,0] == 1:
+                all_steps.append(step_count)
+                break;
+    return sum(all_steps) / len(all_steps)
+            
+
+def main():
+    print(markov)
     vec = np.matrix([[1], [0], [0], [0], [0], [0]])
     print(markov**10000 * vec)
-
+    print(estimate_reach_d_first())
+    print(estimate_average_num_of_steps_to_reach_f())
 
 if __name__ == "__main__":
     main()
