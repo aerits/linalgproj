@@ -1,7 +1,7 @@
 import numpy as np
 import random as r
 
-markov = np.array([
+markov = np.matrix([
     #a     b    c    d    e    f
     [0,    3/8, 1/9, 0  , 0  , 0], #a
     [0.75, 0,   2/9, 0  , 3/6, 0], #b
@@ -15,23 +15,39 @@ vec = np.array('1;0;0;0;0;0')
 
 def follow_markov(markov, vector: np.array) -> np.matrix:
     new_vec = markov * vector;
-    rand = r.random()
+    rand = r.random() - 0.05
     total_prob = 0;
-    index = 0;
-    for j in new_vec:
-        index += 1;
-        for i in j:
-            total_prob += i;
-            if total_prob >= rand:
-                arr = np.array([0, 0, 0, 0, 0, 0])
-                arr[index-1] = 1
-                return arr.T
+    indices_with_prob = []
+    for i in range(0,6):
+        # print(new_vec[i,0])
+        if new_vec[i,0] > 0:
+            indices_with_prob.append((i, new_vec[i,0]))
+    last_index = 0
+    for (index, prob) in indices_with_prob:
+        # print("total prob" + str(total_prob) + " rand" + str(rand))
+        total_prob+=prob;
+        if total_prob >= rand:
+            arr = np.matrix([[0], [0], [0], [0], [0], [0]])
+            arr[index] = [1];
+            # print("returning")
+            return arr;
+
+        
 
 def main():
-    vec = np.matrix('1;0;0;0;0;0')
-    while True:
+    print(markov)
+    vec = np.matrix([[1], [0], [0], [0], [0], [0]])
+    probability = np.matrix([[0], [0], [0], [0], [0], [0]])
+    for i in range(0,1_000_000):
         vec = follow_markov(markov, vec)
-        print(vec)
+        # print(vec.T)
+        probability = vec + probability
+        # print(vec)
+    total = probability.sum()
+    probability = probability / total;
+    print(probability)
+    vec = np.matrix([[1], [0], [0], [0], [0], [0]])
+    print(markov**10000 * vec)
 
 
 if __name__ == "__main__":
