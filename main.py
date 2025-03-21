@@ -75,7 +75,7 @@ def estimate_average_num_of_steps_to_reach_f() -> np.matrix:
 def main():
     print(markov)
     vec = np.matrix([[1], [0], [0], [0], [0], [0]])
-    print(markov**10000 * vec)
+    print(markov**1000000000 * vec)
     print(estimate_reach_d_first())
     print(estimate_average_num_of_steps_to_reach_f())
 

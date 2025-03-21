@@ -24,13 +24,26 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
         if len(page.links) == 0:
             page_arr = page_arr + 1; #choose a page at random
 
-        page_arr = page_arr + dampening
+        # page_arr = page_arr + (dampening/len(pages))
+        # print(page_arr)
         total = sum(page_arr)
         page_arr = page_arr / total
+
+        total_dampening_added = 0
+        # add dampening to row with 0 and subtract dampening added to row without 0 to keep total at 1
+        for i in range(0,len(page_arr)):
+            if page_arr[i] == 0:
+                page_arr[i] += dampening/len(pages)
+                total_dampening_added += dampening/len(pages)
+        for i in range(0,len(page_arr)):
+            if len(page.links) > 0 and page_arr[i] != dampening/len(pages):
+                page_arr[i] -= total_dampening_added / len(page.links)
+        
+        
         arr.append(page_arr)
 
     arr = np.matrix(arr);
-    arr = arr.T;
+    arr = arr.T; # transpose matrix to get the matrix
 
     print(arr)
 
@@ -40,7 +53,7 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
         q.append([0])
     q = np.matrix(q)
     q[0,0] = 1;
-    q = arr**1000 * q
+    q = arr**10000000 * q
     
     # create an array of (page name, page probability)
     new_array = []
@@ -62,5 +75,5 @@ a = Page("A", ["B", "C"])
 b = Page("B", [])
 c = Page("C", ["B"])
 pages = [a, b, c]
-a = page_rank(pages, 0.50)
+a = page_rank(pages, 0.12)
 print(a)
