@@ -59,6 +59,8 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
     new_array = []
     for i in range(0,len(pages)):
         new_array.append((pages[i].name, q[i,0]))
+
+    print(new_array)
     
     # remove the highest page probability in new array and add to page ranking
     # do this until there are no more in new array
@@ -71,7 +73,7 @@ def page_rank(pages: list[Page], dampening: float) -> list[str]:
         page_ranking.append(new_array.pop(maximum[0])[0])
     return(page_ranking)
         
-a = Page("A", ["B", "C"])
+a = Page("A", ["C", "B"])
 b = Page("B", [])
 c = Page("C", ["B"])
 pages = [a, b, c]
